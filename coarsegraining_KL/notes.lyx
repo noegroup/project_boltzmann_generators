@@ -155,7 +155,7 @@ General intro
 A popular principle for coarse-graining molecular systems is thermodynamic
  consistency: the coarse-grained and the fine-grained dynamics should have
  the same equilibrium distribution over the coarse-grained variables.
- Two popular realizations of this principle rae: multi-scale coarse-graining
+ Two popular realizations of this principle are: multi-scale coarse-graining
  
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -197,15 +197,17 @@ These methods have complementary strengths and weaknesses – force matching
  benefits from being a supervised learning method, but requires the force
  labels for the training set to be saved when generating the all-atom simulation
 s.
- Although saving forces during MD simulation is neither difficult nor time-consu
-ming, it is not commonly done unless one generates the dataset specifically
- for force matching, and therefore most available MD dataset do not have
- forces available.
+ Although saving forces during MD simulation is straightforward, it is not
+ commonly done, and therefore most available MD datasets do not have forces
+ available.
  Relative entropy coarse-graining does not require force labels, but is
- an unsupervised learning method which is always more difficult than supervised
- learning.
- A main technical challenge of relative entropy coarse-graining is that
- during training, an expectation value over the learned 
+ an unsupervised learning method which is generally more difficult than
+ supervised learning.
+\end_layout
+
+\begin_layout Standard
+A main technical challenge of relative entropy coarse-graining is that during
+ training, an expectation value over the learned 
 \begin_inset Formula $CG$
 \end_inset
 
@@ -229,6 +231,13 @@ literal "false"
  model needs to be resampled while updating its parameters.
  As most interesting molecular systems have metastable states, this method
  suffers from the rare event sampling problem during its training.
+ [
+\series bold
+TODO: check literature, acknowledge that people are aware of this problem
+ and have suggested remedies such as partially reusing past data through
+ reweighting etc.
+\series default
+].
  This problem can make the method computationally untractable, and failing
  to reach a converged sample in every training update can break convergence
  to the optimal 
@@ -854,10 +863,6 @@ g all-atom, orange: BG from panel c).
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
