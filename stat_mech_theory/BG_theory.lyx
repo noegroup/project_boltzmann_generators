@@ -1,0 +1,1470 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass scrartcl
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Boltzmann Generators - Theory
+\end_layout
+
+\begin_layout Section
+Boltzmann Generators
+\end_layout
+
+\begin_layout Subsection
+Short summary of setting
+\end_layout
+
+\begin_layout Standard
+The goal of Boltzmann Generators is to sample efficiently from a Boltzmann
+ distribution.
+ In contrast to established trajectory-based sampling methods, Boltzmann
+ Generators are able to produce statistically independent samples from stationar
+y distributions.
+ This is achieved using Deep Learning.
+\end_layout
+
+\begin_layout Standard
+The learning problem can be stated as follows: We are interested in learning
+ an invertible transformation between a known prior distributions 
+\begin_inset Formula $q_{Z}(z)$
+\end_inset
+
+ and some distribution 
+\begin_inset Formula $p_{X}\left(x\right)$
+\end_inset
+
+, such that 
+\begin_inset Formula $p_{X}\left(x\right)$
+\end_inset
+
+ is as close as possible to another distribution 
+\begin_inset Formula $\mu_{X}(x)$
+\end_inset
+
+, e.g.
+ a Boltzmann distribution.
+ Another formulation of the same problem is that we are interested in learning
+ an invertible transformation between the known distributions 
+\begin_inset Formula $\mu_{X}(x)$
+\end_inset
+
+ and some distribution 
+\begin_inset Formula $p_{Z}\left(z\right)$
+\end_inset
+
+, such that 
+\begin_inset Formula $p_{Z}\left(z\right)$
+\end_inset
+
+ is as close as possible to the prior distribution 
+\begin_inset Formula $q_{Z}(z)$
+\end_inset
+
+.
+ If we have such a transformation it is possible to sample from 
+\begin_inset Formula $q_{Z}(z)$
+\end_inset
+
+ and transform the samples with the learned transformation to obtain samples
+ which follow nearly 
+\begin_inset Formula $\mu_{X}(x)$
+\end_inset
+
+.
+ In practice a multivariate Gaussian is used for the latent prior distribution
+ 
+\begin_inset Formula $q_{Z}(z)$
+\end_inset
+
+ and we want to find an invertible transformation 
+\begin_inset Formula $f(x)$
+\end_inset
+
+, such that 
+\begin_inset Formula $p_{X}(x)$
+\end_inset
+
+ is as close as possible to our desired distribution, e.g.
+ a Boltzmann distribution 
+\begin_inset Formula $\mu_{X}\left(x\right)$
+\end_inset
+
+.
+ In theory it should be possible to match the distributions 
+\begin_inset Formula $\mu_{X}\left(x\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $p_{X}(x)$
+\end_inset
+
+ exactly if there are no restrictions to 
+\begin_inset Formula $f$
+\end_inset
+
+.
+ However, because of the training process and the restrictions to 
+\begin_inset Formula $f$
+\end_inset
+
+ this is not possible in reality.
+ Therefore, reweighting is used In the sampling process to obtain the true
+ Boltzmann distribution 
+\begin_inset Formula $\mu_{X}(x)$
+\end_inset
+
+.
+ The reweighting factor is given by
+\begin_inset Formula 
+\begin{equation}
+w\left(x\right)=\frac{\mu_{X}(x)}{p_{X}(x)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Setup, canonical ensemble
+\end_layout
+
+\end_inset
+
+The transformation 
+\begin_inset Formula $f$
+\end_inset
+
+ can be modeled by an invertible generative network which contains e.g.
+ NICER or RealNVP transformations.
+ The training of Boltzmann Generators is done by minimizing the KL-divergence
+ between 
+\begin_inset Formula $p_{X}\left(x\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\mu_{X}\left(x\right)$
+\end_inset
+
+ (or between 
+\begin_inset Formula $q_{Z}\left(z\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $p_{Z}\left(z\right)$
+\end_inset
+
+ which yields the same loss function).
+ However, the KL-divergence is not symmetric and, therefore, the forward
+ and reverse KL-divergence yield different loss functions.
+ Both can be used to train the network.
+\end_layout
+
+\begin_layout Section
+Non linear transformations and entropy
+\end_layout
+
+\begin_layout Subsection
+Substitution in probability theory
+\end_layout
+
+\begin_layout Standard
+Consider two random variables 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $Z$
+\end_inset
+
+ with probability density 
+\begin_inset Formula $\mu_{X}(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $p_{Z}(z)$
+\end_inset
+
+, respectively.
+ The probability that 
+\begin_inset Formula $Z$
+\end_inset
+
+ takes a value in the arbitrary subset 
+\begin_inset Formula $S$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\begin{equation}
+P(Z\in S)=\int_{S}p_{Z}(z)dz
+\end{equation}
+
+\end_inset
+
+Now, we introduce an invertible transformation 
+\begin_inset Formula $z=f(x)$
+\end_inset
+
+ such that 
+\begin_inset Formula $Z$
+\end_inset
+
+ takes a value in 
+\begin_inset Formula $S$
+\end_inset
+
+ whenever 
+\begin_inset Formula $X$
+\end_inset
+
+ takes a value in 
+\begin_inset Formula $f^{-1}(S)$
+\end_inset
+
+.
+ Thus
+\begin_inset Formula 
+\begin{equation}
+P(Z\in S)=\int_{f^{-1}(S)}\mu_{X}(x)dx
+\end{equation}
+
+\end_inset
+
+Performing the substitution 
+\begin_inset Formula $x=f^{-1}(z)$
+\end_inset
+
+ yields
+\begin_inset Formula 
+\begin{equation}
+\int_{f^{-1}(S)}\mu_{X}(x)dx=\int_{S}\mu_{X}(f^{-1}(z))\left|\frac{df^{-1}}{dz}\right|dz
+\end{equation}
+
+\end_inset
+
+Combining the above equations, we obtain
+\begin_inset Formula 
+\begin{equation}
+\int_{S}p_{Z}(z)dz=\int_{S}\mu_{X}(f^{-1}(z))\left|\frac{df^{-1}}{dz}\right|dz
+\end{equation}
+
+\end_inset
+
+As this holds for arbitrary subsets 
+\begin_inset Formula $S$
+\end_inset
+
+, we conclude
+\begin_inset Formula 
+\begin{equation}
+p_{Z}(z)=\mu_{X}(f^{-1}(z))\left|\frac{df^{-1}(z)}{dz}\right|
+\end{equation}
+
+\end_inset
+
+or equally 
+\begin_inset Formula 
+\begin{equation}
+\mu_{X}(x)=p_{Z}(f(x))\left|\frac{df(x)}{dx}\right|\label{eq:}
+\end{equation}
+
+\end_inset
+
+For multiple dimensions, this generalizes to 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\mu_{X}(x)=p_{Z}(f(x))\left|\det J(f(x))\right|\label{eq:transform}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\det J(f(x))$
+\end_inset
+
+ is the determinant of the Jacobian Matrix.
+\end_layout
+
+\begin_layout Subsection
+Forward KL-Divergence in latent space
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:KL-Divergence-in-latent"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Assume we have an invertible transformation 
+\begin_inset Formula $z=f(x)$
+\end_inset
+
+ between configuration space and latent space with distributions 
+\begin_inset Formula $\mu_{X}(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $p_{Z}(z)$
+\end_inset
+
+, respectively.
+ The relation between the two distributions is defined in equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:"
+
+\end_inset
+
+.
+ In the case of Boltzmann Generators, one is interested in learning the
+ transformation 
+\begin_inset Formula $f$
+\end_inset
+
+ such that 
+\begin_inset Formula $p_{Z}(z)$
+\end_inset
+
+ is close to a prior distribution 
+\begin_inset Formula $q_{Z}(z)$
+\end_inset
+
+, e.g.
+ a multivariate Gaussian.
+ 
+\end_layout
+
+\begin_layout Standard
+The prior distribution 
+\begin_inset Formula $q_{Z}\left(z\right)$
+\end_inset
+
+ transforms similar to eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:transform"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ via
+\begin_inset Formula 
+\begin{equation}
+p_{X}(x)=q_{Z}(f(x))\left|\det J\left(f(x)\right)\right|\label{eq:transform-1}
+\end{equation}
+
+\end_inset
+
+to the distribution 
+\begin_inset Formula $p_{X}\left(x\right)$
+\end_inset
+
+.
+ A suitable loss function for training purposes is given by the KL-Divergence
+ in latent space, namely
+\begin_inset Formula 
+\begin{align}
+KL\left(q_{Z}(z)||p_{Z}(z)\right) & =\int q_{Z}(z)\log\left(q_{Z}(z)\right)dz-\int q_{Z}(z)\log\left(p_{Z}(z)\right)dz\\
+ & =-H_{q}-\int q_{Z}(z)\log\left(p_{Z}(z)\right)dz
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $H_{q}$
+\end_inset
+
+ denotes the (information) entropy of the prior distribution.
+ Using equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:transform"
+
+\end_inset
+
+, this can be rewritten as
+\begin_inset Formula 
+\begin{align}
+KL\left(q_{Z}(z)||p_{Z}(z)\right) & =-H_{q}-\int q_{Z}(z)\log\left(\mu_{X}(f^{-1}(z))\left|\det J\left(f^{-1}(z)\right)\right|\right)dz\\
+ & =-H_{q}-\int q_{Z}(z)\log\left(\mu_{X}(f^{-1}(z))\right)dz-\int q_{Z}(z)\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)dz\\
+ & =-H_{q}+\mathbb{E}_{z\sim q_{Z}(z)}\left[-\log\left(\mu_{X}(f^{-1}(z))\right)-\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)\right]
+\end{align}
+
+\end_inset
+
+The same result can be obtained by a KL divergence in configuration space.
+ 
+\begin_inset Formula 
+\begin{align}
+KL\left(p_{X}\left(x\right)||\mu_{X}\left(x\right)\right) & =\int p_{X}\left(x\right)\log\left(p_{X}\left(x\right)\right)dx-\int p_{X}\left(x\right)\log\left(\mu_{X}\left(x\right)\right)dx\\
+ & =\int q_{Z}\left(f\left(x\right)\right)\left|\det J\left(f\left(x\right)\right)\right|\log\left(q_{Z}\left(f\left(x\right)\right)\left|\det J\left(f\left(x\right)\right)\right|\right)dx\\
+ & -\int q_{Z}\left(f\left(x\right)\right)\left|\det J\left(f\left(x\right)\right)\right|\log\left(\mu_{X}\left(x\right)\right)dx\\
+ & =\int q_{Z}\left(z\right)\log\left(q_{Z}\left(z\right)\left|\det J\left(f^{-1}\left(z\right)\right)\right|^{-1}\right)dz\\
+ & -\int q_{Z}\left(z\right)\log\left(\mu_{X}\left(f^{-1}\left(z\right)\right)\right)dz\\
+ & =\int q_{Z}\left(z\right)\log\left(q_{Z}\left(z\right)\right)dz-\int q_{Z}\left(z\right)\log\left(\left|\det J\left(f^{-1}\left(z\right)\right)\right|\right)dz\\
+ & -\int q_{Z}\left(z\right)\log\left(\mu_{X}\left(f^{-1}\left(z\right)\right)\right)dz\\
+ & =KL\left(q_{Z}(z)||p_{Z}(z)\right)
+\end{align}
+
+\end_inset
+
+where substitution and the inverse function theorem 
+\begin_inset Formula $\det J\left(f^{-1}\left(z\right)\right)=\left[\det J\left(f\left(x\right)\right)\right]^{-1}$
+\end_inset
+
+ were used.
+ Therefore, the distributions can either be compared in the latent or in
+ the configuration space.
+\end_layout
+
+\begin_layout Standard
+Because we are dealing with real systems, we are usually interested in sampling
+ from a Boltzmann distribution 
+\begin_inset Formula $\mu_{X}(x)=\frac{1}{Z_{X}}\exp\left\{ -\frac{u(x)}{k_{B}T}\right\} $
+\end_inset
+
+ in configuration space with the partition function 
+\begin_inset Formula $Z_{X}$
+\end_inset
+
+ and the Hamiltonian 
+\begin_inset Formula $u$
+\end_inset
+
+ (which is in our case just the potential energy) of the investigated system.
+ A common choice for the prior distribution is a multivariate Gaussian.
+ This simplifies the KL-Divergence to
+\begin_inset Formula 
+\begin{equation}
+KL\left(q_{Z}(z)||p_{Z}(z)\right)=-H_{q}+\log\left(Z_{X}\right)+\mathbb{E}_{z\sim q_{Z}(z)}\left[\left(\frac{u(f^{-1}(z))}{k_{B}T}\right)-\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)\right]\label{eq:KLdivereǵence}
+\end{equation}
+
+\end_inset
+
+Because both the entropy of the latent distribution 
+\begin_inset Formula $H_{q}$
+\end_inset
+
+ and the partition function 
+\begin_inset Formula $Z$
+\end_inset
+
+ of the Boltzmann distribution are constants, we can omit these terms.
+ This leaves us with
+\begin_inset Formula 
+\begin{equation}
+KL\left(q_{Z}(z)||p_{Z}(z)\right)\sim\mathbb{E}_{z\sim q_{Z}(z)}\left[\left(\frac{u(f^{-1}(z))}{k_{B}T}\right)-\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)\right]
+\end{equation}
+
+\end_inset
+
+The first term can be seen as the internal energy of the system as it is
+ the ensemble average of the Hamiltonian.
+ The second term is related to the entropy difference between the distributions
+ 
+\begin_inset Formula $p_{X}(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{Z}(z)$
+\end_inset
+
+ as we will see in the next section.
+\end_layout
+
+\begin_layout Standard
+The same loss function can be obtained by minimizing the negative average
+ of the reweighting weights 
+\begin_inset Formula $w\left(x\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+-\int p_{X}\left(x\right)\log\left(w\left(x\right)\right)dx & =\int p_{X}\left(x\right)\log\left(\frac{p_{X}\left(x\right)}{\mu_{X}\left(x\right)}\right)dx\\
+ & =KL\left(p_{X}\left(x\right)||\mu_{X}\left(x\right)\right)\label{eq:KLweights}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Invertible transformations and entropy
+\end_layout
+
+\begin_layout Standard
+Again, we consider the same invertible transformation between the two random
+ variables 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $Z$
+\end_inset
+
+.
+ This time, we are interested in the entropy of the distributions and their
+ relation.
+ The information entropy 
+\begin_inset Formula $H_{P_{X}}$
+\end_inset
+
+ of the distribution 
+\begin_inset Formula $p_{X}(x)$
+\end_inset
+
+ is defined as 
+\begin_inset Formula 
+\begin{equation}
+H_{p_{X}}=-\int_{\Omega}p_{X}(x)\log\left(p_{X}(x)\right)dx
+\end{equation}
+
+\end_inset
+
+Note, that this is nearly equivalent to the entropy expression in statistical
+ mechanics, which only requires an additional factor of 
+\begin_inset Formula $k_{B}$
+\end_inset
+
+.
+ As the distributions are related by equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:transform"
+
+\end_inset
+
+, substitution is again possible.
+ This yields for the entropy
+\begin_inset Formula 
+\begin{align}
+H_{p_{X}} & =-\int_{\Omega}p_{X}(x)\log\left(q_{Z}(f(x))\left|\det J(f(x))\right|\right)dx\\
+ & =-\int_{\Omega}p_{X}(x)\log\left(q_{Z}(f(x))\right)dx-\int_{\Omega}p_{X}(x)\log\left(\left|\det J(f(x))\right|\right)dx
+\end{align}
+
+\end_inset
+
+The second term is just the average of 
+\begin_inset Formula $\log\left(\left|\det\frac{df(x)}{dx}\right|\right)$
+\end_inset
+
+ with respect to the distribution 
+\begin_inset Formula $p_{X}(x)$
+\end_inset
+
+, which we will take care of later.
+ The first term is equal to the entropy 
+\begin_inset Formula $H_{Z}$
+\end_inset
+
+ of the prior distribution 
+\begin_inset Formula $q_{Z}(z)$
+\end_inset
+
+.
+ To show this, we start again by using equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:transform"
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{align}
+-\int_{\Omega}p_{X}(x)\log\left(q_{Z}(f(x))\right)dx & =-\int_{\Omega}q_{Z}(f(x))\left|\det J(f(x))\right|\log\left(q_{Z}(f(x))\right)dx
+\end{align}
+
+\end_inset
+
+Now, we are in a position to perform the change of variables with 
+\begin_inset Formula $z=f(x)$
+\end_inset
+
+.
+ The differentials transform as 
+\begin_inset Formula 
+\begin{equation}
+dz=\left|\det J(f(x))\right|dx
+\end{equation}
+
+\end_inset
+
+As this is the same Jacobian as in the transformation of the distributions
+ these two terms cancel each other
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+-\int_{\Omega}q_{Z}(f(x))\left|\det J(f(x))\right|\log\left(q_{Z}(f(x))\right)dx & =-\int_{f(\Omega)}q_{Z}(z)\left|\det J(f(x))\right|\log\left(q_{Z}(z)\right)\left|\det J(f(x))\right|^{-1}dz\\
+ & =-\int_{f(\Omega)}q_{Z}(z)\log\left(q_{Z}(z)\right)dz=H_{q}
+\end{align}
+
+\end_inset
+
+which is the information entropy of the distribution 
+\begin_inset Formula $q_{Z}(z)$
+\end_inset
+
+.
+ Collecting the terms, we obtain
+\begin_inset Formula 
+\begin{equation}
+H_{p_{X}}=H_{q}-\mathbb{E}_{x\sim p_{X}(x)}\log\left(\left|\det J(f(x))\right|\right)
+\end{equation}
+
+\end_inset
+
+or equally
+\begin_inset Formula 
+\begin{equation}
+H_{q}=H_{p_{X}}-\mathbb{E}_{z\sim q_{Z}(z)}\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)
+\end{equation}
+
+\end_inset
+
+Therefore, the entropy difference between the two distributions connected
+ by the transformation 
+\begin_inset Formula $f(x)$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\begin{align}
+H_{q}-H_{p_{X}} & =\mathbb{E}_{x\sim p_{X}(x)}\log\left(\left|\det J(f(x))\right|\right)\\
+ & =-\mathbb{E}_{z\sim q_{Z}(z)}\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)\label{eq:Entropy difference-1}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+KL-divergence and free energy 
+\end_layout
+
+\begin_layout Subsection
+Helmholtz free energy
+\end_layout
+
+\begin_layout Standard
+Helmholtz free energy 
+\begin_inset Formula $F$
+\end_inset
+
+ is defined as 
+\begin_inset Formula 
+\begin{align}
+F & =U-TS
+\end{align}
+
+\end_inset
+
+as usual 
+\begin_inset Formula $U$
+\end_inset
+
+ denotes the internal energy, 
+\begin_inset Formula $T$
+\end_inset
+
+ the temperature and 
+\begin_inset Formula $S$
+\end_inset
+
+ the entropy of the system.
+ Helmholtz free energy is the defining potential of the canonical ensemble.
+ 
+\end_layout
+
+\begin_layout Subsection
+Putting things together
+\end_layout
+
+\begin_layout Standard
+Coming back to equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:KLdivereǵence"
+
+\end_inset
+
+, we can now use equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Entropy difference-1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to make sense of the term with the determinant of the Jacobian
+\begin_inset Formula 
+\begin{align}
+KL\left(q_{Z}(z)||p_{Z}(z)\right) & =-H_{q}+\log\left(Z_{X}\right)+\mathbb{E}_{z\sim q_{Z}(z)}\left[\left(\frac{u(f^{-1}(z))}{k_{B}T}\right)-\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)\right]\\
+ & =-H_{q}+\log\left(Z_{X}\right)+\mathbb{E}_{z\sim q_{Z}(z)}\left[\left(\frac{u(f^{-1}(z))}{k_{B}T}\right)\right]+H_{q}-H_{p_{X}}
+\end{align}
+
+\end_inset
+
+The entropy of the prior distribution cancels out and up to the constant
+ partition function 
+\begin_inset Formula $Z_{X}$
+\end_inset
+
+ this expression looks like Helmholtz free energy divided by 
+\begin_inset Formula $k_{B}T$
+\end_inset
+
+.
+ And hence
+\begin_inset Formula 
+\begin{align}
+KL\left(q_{Z}(z)||p_{Z}(z)\right) & \sim\mathbb{E}_{z\sim q_{Z}(z)}\left[\left(\frac{u(f^{-1}(z))}{k_{B}T}\right)\right]-H_{p_{X}}\\
+ & =\mathbb{E}_{x\sim p_{X}\left(x\right)}\left[\left(\frac{u(x)}{k_{B}T}\right)\right]-H_{p_{X}}\\
+ & =\frac{U}{k_{B}T}-\frac{S}{k_{B}}=\frac{F}{k_{B}T}
+\end{align}
+
+\end_inset
+
+The first term is the ensemble average of the potential energy which is
+ the internal energy 
+\begin_inset Formula $U$
+\end_inset
+
+ of the system.
+ The second term is simply the information entropy of the system which is
+ the same as the entropy in statistical mechanics multiplied by 
+\begin_inset Formula $k_{B}$
+\end_inset
+
+.
+ Therefore, learning a transformation using the KL-divergence as a loss
+ function is equivalent to minimizing the free energy 
+\begin_inset Formula $F$
+\end_inset
+
+ of the system, which is described by the distribution 
+\begin_inset Formula $p_{x}\left(x\right)$
+\end_inset
+
+.
+ In other words, the transformation 
+\begin_inset Formula $f$
+\end_inset
+
+ is optimized such that 
+\begin_inset Formula $p_{x}\left(x\right)$
+\end_inset
+
+ has the minimal free energy (stationary distribution).
+ The distribution with the minimal free energy in the canonical ensemble
+ is the Boltzmann distribution.
+ Accordingly, minimizing the free energy equals minimizing the difference
+ between 
+\begin_inset Formula $p_{X}\left(x\right)$
+\end_inset
+
+ and the Boltzmann distribution 
+\begin_inset Formula $\mu_{X}\left(x\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Training at different temperatures 
+\color red
+(not working atm)
+\end_layout
+
+\begin_layout Subsection
+Idea
+\end_layout
+
+\begin_layout Standard
+Simple MCMC sampling can be improved by running simulations of the same
+ system at different temperatures simultaneously and exchanging the configuratio
+ns based on the Metropolis criterion depending on the temperatures.
+ This is called Parallel tempering or replica exchange and improves the
+ exploration of less likely regions.
+\end_layout
+
+\begin_layout Standard
+Therefore, it is desirable to be able to do a similar thing using Boltzmann
+ generators.
+ In the best case, we would like to use the same transformation (and therefore
+ also the same network) and a different prior distribution in the latent
+ space, e.g.
+ a Gaussian with a different variance, for the same Boltzmann distribution
+ at different temperatures.
+ In the following, the possibilities and limitations of this approach are
+ discussed for different generating network architectures.
+ 
+\end_layout
+
+\begin_layout Standard
+The key idea is to use the same transformation 
+\begin_inset Formula $f$
+\end_inset
+
+ for the training at different temperatures.
+ Otherwise this would result in different transformations for different
+ temperatures and nothing is gained.
+ However, this is only possible by changing the prior distributions, i.e.
+ using modified Boltzmann and Gaussian distributions for training at different
+ temperatures.
+ 
+\color red
+Currently, the loss function for different temperatures does not make sense.
+ This is always marked with red in the following.
+ Accordingly, we have to find a different loss function which is useful
+ for this problem or the error in the calculations/assumptions..
+ 
+\end_layout
+
+\begin_layout Subsection
+General approach for arbitrary transformations
+\end_layout
+
+\begin_layout Standard
+The probability density of a system is dependent on the temperature as it
+ appears in the Boltzmann distribution 
+\begin_inset Formula $\mu_{X}$
+\end_inset
+
+, which is given by
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\mu_{X}(x)=\frac{1}{Z_{X}}\exp\left\{ -\frac{u(x)}{k_{B}T}\right\} 
+\end{equation}
+
+\end_inset
+
+with partition function 
+\begin_inset Formula $Z_{X}$
+\end_inset
+
+ and the potential energy 
+\begin_inset Formula $u\left(x\right)$
+\end_inset
+
+.
+ In the latent space we have a multivariate standard Gaussian
+\begin_inset Formula 
+\begin{equation}
+q_{Z}\left(z\right)=\frac{1}{Z_{Z}}\exp\left\{ -\frac{1}{2}\left\Vert z\right\Vert \text{²}\right\} 
+\end{equation}
+
+\end_inset
+
+Samples from this distribution are transformed to the configuration space
+ with the transformation 
+\begin_inset Formula $f^{-1}\left(z\right)$
+\end_inset
+
+.
+ The resulting distribution 
+\begin_inset Formula $p_{X}\left(x\right)$
+\end_inset
+
+ is given due to equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:transform-1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ by
+\begin_inset Formula 
+\begin{equation}
+q_{Z}(z)=p_{X}(f^{-1}\left(z\right))\left|\det J\left(f^{-1}\left(z\right)\right)\right|\label{px}
+\end{equation}
+
+\end_inset
+
+We can rewrite equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "px"
+
+\end_inset
+
+ utilizing multiplicative inverse factor of the reweighting weights 
+\begin_inset Formula $\Delta(x)=w^{-1}(x)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+q_{Z}(z)=\mu_{X}\left(f^{-1}\left(z\right)\right)\Delta\left(f^{-1}\left(z\right)\right)\left|\det J\left(f^{-1}\left(z\right)\right)\right|
+\end{equation}
+
+\end_inset
+
+In the case of a perfectly trained network we have 
+\begin_inset Formula $\Delta(x)=1$
+\end_inset
+
+, but this might not be possible depending on the restrictions to 
+\begin_inset Formula $f$
+\end_inset
+
+.
+ Taking both sides of the equation to the power of 
+\begin_inset Formula $\frac{1}{\tau_{k}}$
+\end_inset
+
+ yields
+\begin_inset Formula 
+\begin{equation}
+\left(q_{Z}(z)\right)^{\frac{1}{\tau_{k}}}=\left(\mu_{X}\left(f^{-1}\left(z\right)\right)\right)^{\frac{1}{\tau_{k}}}\left(\Delta\left(f^{-1}\left(z\right)\right)\right)^{\frac{1}{\tau_{k}}}\left|\det J\left(f^{-1}\left(z\right)\right)\right|^{\frac{1}{\tau_{k}}}
+\end{equation}
+
+\end_inset
+
+This operation changes the variance of each independent component of the
+ Gaussian by 
+\begin_inset Formula $\tau_{k}$
+\end_inset
+
+, which are no longer normalized correctly.
+ Moreover, the temperature of the Boltzmann distribution is also changed
+ by the factor 
+\begin_inset Formula $\tau_{k}$
+\end_inset
+
+.
+ However, even a perfectly trained network (
+\begin_inset Formula $\Delta(x)=1$
+\end_inset
+
+) would not sample the correct Boltzmann distribution at a different temperature
+, but a modified one with the scaling factor 
+\begin_inset Formula $\left|\det J\left(f^{-1}\left(z\right)\right)\right|^{\frac{1-\tau_{k}}{\tau_{k}}}$
+\end_inset
+
+.
+ Nevertheless, there will always be an error 
+\begin_inset Formula $\Delta(x)$
+\end_inset
+
+ (due to the training and the constraints to 
+\begin_inset Formula $f$
+\end_inset
+
+) in a real setup.
+ Accordingly, it is important to take a closer look at this factor.
+ Writing down the previous equation explicitly yields
+\begin_inset Formula 
+\begin{align}
+\frac{1}{Z_{Z}^{\frac{1}{\tau_{k}}}}\exp\left\{ -\frac{1}{2}\frac{\left\Vert z\right\Vert \text{²}}{\tau_{k}}\right\}  & =\frac{1}{Z_{X}^{\frac{1}{\tau_{k}}}}\exp\left\{ -\frac{u(f^{-1}\left(z\right))}{k_{B}\tau_{k}T}\right\} \frac{\left(p_{X}(f^{-1}\left(z\right))\right)^{\frac{1}{\tau_{k}}}}{\frac{1}{Z_{X}^{\frac{1}{\tau_{k}}}}\exp\left\{ -\frac{u(f^{-1}\left(z\right))}{k_{B}\tau_{k}T}\right\} }\left|\det J\left(f^{-1}\left(z\right)\right)\right|^{\frac{1}{\tau_{k}}}\\
+\frac{1}{Z_{Z}^{\frac{1}{\tau_{k}}}}\frac{Z_{Z}^{\left(\tau_{k}\right)}}{Z_{Z}^{\left(\tau_{k}\right)}}\exp\left\{ -\frac{1}{2}\frac{\left\Vert z\right\Vert \text{²}}{\tau_{k}}\right\}  & =\frac{1}{Z_{X}^{\frac{1}{\tau_{k}}}}\exp\left\{ -\frac{u(f^{-1}\left(z\right))}{k_{B}\tau_{k}T}\right\} \frac{\left(p_{X}(f^{-1}\left(z\right))\right)^{\frac{1}{\tau_{k}}}}{\frac{1}{Z_{X}^{\frac{1}{\tau_{k}}}}\exp\left\{ -\frac{u(f^{-1}\left(z\right))}{k_{B}\tau_{k}T}\right\} }\left|\det J\left(f^{-1}\left(z\right)\right)\right|^{\frac{1-\tau_{k}}{\tau_{k}}}\left|\det J\left(f^{-1}\left(z\right)\right)\right|\\
+q_{Z}^{\left(\tau_{k}\right)}(z) & =\frac{Z_{X}^{^{\left(\tau_{k}\right)}}}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\mu_{X}^{\left(\tau_{k}\right)}\left(f^{-1}\left(z\right)\right)\left|\det J\left(f^{-1}\left(z\right)\right)\right|^{\frac{1-\tau_{k}}{\tau_{k}}}\Delta^{\left(\tau_{k}\right)}\left(f^{-1}\left(z\right)\right)\left|\det J\left(f^{-1}\left(z\right)\right)\right|
+\end{align}
+
+\end_inset
+
+where the upper index 
+\begin_inset Formula $\left(\tau_{k}\right)$
+\end_inset
+
+ denotes the different temperature or variance, e.g.
+ 
+\begin_inset Formula $q_{Z}^{\left(\tau_{k}\right)}(z)$
+\end_inset
+
+ is a normalized multivariate Gaussian with variance 
+\begin_inset Formula $\tau_{k}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mu_{X}^{\left(\tau_{k}\right)}$
+\end_inset
+
+ is a normalized Boltzmann distribution at temperature 
+\begin_inset Formula $\tau_{k}T$
+\end_inset
+
+.
+ The error is now given by
+\begin_inset Formula 
+\begin{align}
+\Delta^{\left(\tau_{k}\right)}\left(f^{-1}\left(z\right)\right) & =\frac{\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\left(p_{X}(f^{-1}\left(z\right))\right)^{\frac{1}{\tau_{k}}}\left|\det J\left(f^{-1}\left(z\right)\right)\right|^{\frac{1-\tau_{k}}{\tau_{k}}}}{\frac{1}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\exp\left\{ -\frac{u(f^{-1}\left(z\right))}{k_{B}\tau_{k}T}\right\} \left|\det J\left(f^{-1}\left(z\right)\right)\right|^{\frac{1-\tau_{k}}{\tau_{k}}}}\\
+ & =\frac{p_{X}^{\left(\tau_{k}\right)}(f^{-1}\left(z\right))}{\frac{Z_{X}^{^{\left(\tau_{k}\right)}}}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\mu_{X}^{\left(\tau_{k}\right)}\left(f^{-1}\left(z\right)\right)\left|\det J\left(f^{-1}\left(z\right)\right)\right|^{\frac{1-\tau_{k}}{\tau_{k}}}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The distribution in the numerator can be obtained by transforming samples
+ from 
+\begin_inset Formula $q_{Z}^{\left(\tau_{k}\right)}(z)$
+\end_inset
+
+ using the transformation 
+\begin_inset Formula $f$
+\end_inset
+
+.
+ This transformation is still the same as for the original temperature.
+ In that way the same transformation 
+\begin_inset Formula $f$
+\end_inset
+
+ can be used for different temperatures, allowing simultaneous training.
+ This is the reason for the equation to be written like that.
+ Accordingly, the learning goal for different temperatures has slightly
+ changed: Instead of matching 
+\begin_inset Formula $p_{X}^{\left(\tau_{k}\right)}\left(x\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\mu_{X}^{\left(\tau_{k}\right)}\left(x\right)$
+\end_inset
+
+ directly, 
+\begin_inset Formula $p_{X}^{\left(\tau_{k}\right)}\left(x\right)$
+\end_inset
+
+ is matched with a modified Boltzmann dist 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{\mu}_{X}^{\left(\tau_{k}\right)}\left(x\right)=\frac{Z_{X}^{^{\left(\tau_{k}\right)}}}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\mu_{X}^{\left(\tau_{k}\right)}\left(x\right)\left|\det J\left(x\right)\right|^{\frac{1-\tau_{k}}{\tau_{k}}}
+\end{equation}
+
+\end_inset
+
+such that 
+\begin_inset Formula $\left(p_{X}(f^{-1}\left(z\right))\right)^{\frac{1}{\tau_{k}}}$
+\end_inset
+
+ is close to 
+\begin_inset Formula $\mu_{X}^{\left(\tau_{k}\right)}\left(x\right)$
+\end_inset
+
+ and the same transformation 
+\begin_inset Formula $f$
+\end_inset
+
+ can be used.
+ However, depending on the determinant, 
+\begin_inset Formula $p_{X}^{\left(\tau_{k}\right)}\left(x\right)$
+\end_inset
+
+ might not be a Boltzmann distribution.
+\end_layout
+
+\begin_layout Standard
+As shown in eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:KLweights"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ minimizing the average of the error 
+\begin_inset Formula $\Delta^{\left(\tau_{k}\right)}\left(x\right)$
+\end_inset
+
+ is equivalent to minimizing the KL-divergence.
+ Therefore, the loss function for the modified temperature is given by
+\begin_inset Formula 
+\begin{align}
+\int q_{Z}^{\left(\tau_{k}\right)}\left(z\right)\log\left(\Delta^{\left(\tau_{k}\right)}\left(f^{-1}\left(z\right)\right)\right)dz & =KL\left(p_{X}^{\left(\tau_{k}\right)}(x)||\frac{Z_{X}^{^{\left(\tau_{k}\right)}}}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\mu_{X}^{\left(\tau_{k}\right)}\left(x\right)\left|\det J\left(f^{-1}\left(z\right)\right)\right|^{\frac{1-\tau_{k}}{\tau_{k}}}\right)\\
+ & \approx\mathbb{E}_{z\sim q_{Z}^{\left(\tau_{k}\right)}(z)}\left[-\log\left(\frac{Z_{X}^{^{\left(\tau_{k}\right)}}}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\mu_{X}^{\left(\tau_{k}\right)}(f^{-1}(z))\left|\det J\left(f^{-1}\left(z\right)\right)\right|^{\frac{1-\tau_{k}}{\tau_{k}}}\right)\right]\\
+ & +\mathbb{E}_{z\sim q_{Z}^{\left(\tau_{k}\right)}(z)}\left[-\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)\right]\\
+ & \approx\mathbb{E}_{z\sim q_{Z}^{\left(\tau_{k}\right)}(z)}\left[-\log\left(\mu_{X}^{\left(\tau_{k}\right)}(f^{-1}(z))\right)-\frac{1}{\tau_{k}}\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)\right]\\
+ & =\mathbb{E}_{z\sim q_{Z}^{\left(\tau_{k}\right)}(z)}\left[\left(\frac{u(f^{-1}(z))}{k_{B}T\tau_{k}}\right)-\frac{1}{\tau_{k}}\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)\right]\\
+ & =\frac{1}{\tau_{k}}\mathbb{E}_{z\sim q_{Z}^{\left(\tau_{k}\right)}(z)}\left[\left(\frac{u(f^{-1}(z))}{k_{B}T}\right)-\log\left(\left|\det J\left(f^{-1}(z)\right)\right|\right)\right]\label{eq:trainingnonpreserving}
+\end{align}
+
+\end_inset
+
+where the same derivation as in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:KL-Divergence-in-latent"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is used and constant terms are ignored as they are not relevant in the
+ optimization process.
+ Minimization of this loss yields by construction the same transformation
+ 
+\begin_inset Formula $f$
+\end_inset
+
+ for arbitrary temperatures 
+\begin_inset Formula $\tau_{k}T$
+\end_inset
+
+.
+ 
+\color red
+However, it obviously does not.
+ The loss function is the same as for 
+\begin_inset Formula $\tau_{k}=1$
+\end_inset
+
+ with the exception that we sample from a different Gaussian.
+ The minimum will be different and therefore also 
+\begin_inset Formula $f$
+\end_inset
+
+!
+\end_layout
+
+\begin_layout Standard
+Because the learned distributions 
+\begin_inset Formula $p_{X}^{\left(\tau_{k}\right)}(x)$
+\end_inset
+
+ can be quite different from the Boltzmann distribution at the respective
+ temperature, sampling will be problematic.
+ Nevertheless, we have access to the appropriate reweighting factor.
+ The reweighing factor is given by
+\begin_inset Formula 
+\begin{equation}
+w^{\left(\tau_{k}\right)}(x)=\frac{\mu_{X}^{\left(\tau_{k}\right)}\left(x\right)}{p_{X}^{\left(\tau_{k}\right)}(x)}
+\end{equation}
+
+\end_inset
+
+but because we are not trying to match these two distributions, these weights
+ might become very large during training, resulting in bad samples.
+\end_layout
+
+\begin_layout Subsection
+Volume preserving transformations (not very useful)
+\end_layout
+
+\begin_layout Standard
+In the case of volume preserving transformations there is a direct connection
+ between the temperature of the system and the variance in the latent space.
+ A volume preserving transformation can be achieved using a NICER network
+ without additional rescaling.
+ In this case the determinant of the Jacobian is one.
+ This is quite a big restriction to 
+\begin_inset Formula $f$
+\end_inset
+
+ so it wont be possible to learn certain Boltzmann distributions.
+ (Actually, it seems to me that only harmonic oscillators can be learned
+ exactly.) However, this simplifies the equations quite a lot.
+ The change of variables equation becomes
+\begin_inset Formula 
+\begin{equation}
+q_{Z}^{\left(\tau_{k}\right)}(z)=\frac{Z_{X}^{^{\left(\tau_{k}\right)}}}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\mu_{X}^{\left(\tau_{k}\right)}\left(f^{-1}\left(z\right)\right)\Delta^{\left(\tau_{k}\right)}\left(f^{-1}\left(z\right)\right)\label{eq:changeofvariable_volumepreserving}
+\end{equation}
+
+\end_inset
+
+Therefore, a perfectly trained network (i.e.
+ 
+\begin_inset Formula $\Delta\left(x\right)=1$
+\end_inset
+
+) would be able to produce samples at arbitrary temperatures by simply changing
+ the variance of each component of the latent Gaussian distribution.
+ This makes sense for Harmonic oscillators, but not for more complicated
+ potential energy functions (remember that it is probably not possible to
+ learn them anyways).
+ The loss function for the modified temperature is now given by
+\begin_inset Formula 
+\begin{align}
+KL\left(p_{X}^{\left(\tau_{k}\right)}(x)||\frac{Z_{X}^{^{\left(\tau_{k}\right)}}}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\mu_{X}^{\left(\tau_{k}\right)}\left(x\right)\right) & \approx\mathbb{E}_{z\sim q_{Z}^{\left(\tau_{k}\right)}(z)}\left[-\log\left(\mu_{X}^{\left(\tau_{k}\right)}(f^{-1}(z))\right)\right]\\
+ & =\mathbb{E}_{z\sim q_{Z}^{\left(\tau_{k}\right)}(z)}\left[\left(\frac{u(f^{-1}(z))}{k_{B}T\tau_{k}}\right)\right]
+\end{align}
+
+\end_inset
+
+
+\color red
+Same problem as before...
+\end_layout
+
+\begin_layout Standard
+Nevertheless, generating samples at a different temperatures is easy.
+ As stated in equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:changeofvariable_volumepreserving"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, transforming the samples from a Gaussian distribution with variance 
+\begin_inset Formula $\tau_{k}$
+\end_inset
+
+ will result in samples from a Boltzmann distribution (not normalized) at
+ the temperature 
+\begin_inset Formula $T\tau_{k}$
+\end_inset
+
+ with the error 
+\begin_inset Formula $\Delta^{\left(\tau_{k}\right)}\left(x\right)$
+\end_inset
+
+.
+ The error is the inverse reweighting factor and reads
+\begin_inset Formula 
+\begin{align}
+\Delta^{\left(\tau_{k}\right)}\left(x\right) & =\frac{\left(p_{X}(x)\right)^{\frac{1}{\tau_{k}}}}{\frac{1}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\exp\left\{ -\frac{u(x)}{k_{B}\tau_{k}T}\right\} }\\
+ & =\left(\frac{p_{X}(x)}{\frac{1}{Z_{X}}\exp\left\{ -\frac{u(x)}{k_{B}T}\right\} }\right)^{^{\frac{1}{\tau_{k}}}}\\
+ & =\Delta^{\frac{1}{\tau_{k}}}\left(x\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore, the error we are making by sampling at the different temperature
+ depends on the error at the original temperature and will probably be much
+ larger.
+ As a result, having original reweighting weights 
+\begin_inset Formula $w\left(x\right)$
+\end_inset
+
+ close to one is very important if we want to sample at different temperatures
+ using the same transformation 
+\begin_inset Formula $f$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Non-volume preserving transformations with constant Jacobian
+\end_layout
+
+\begin_layout Standard
+Another special case are non-volume preserving transformations where the
+ Jacobian does not depend on the input, i.e.
+ 
+\begin_inset Formula $\left|\det J\left(f^{-1}(z)\right)\right|=S_{f^{-1}}$
+\end_inset
+
+.
+ Nevertheless, the Jacobian is still important in the minimization process,
+ because it depends on the parameters we are optimizing for.
+ A transformation like that can be achieved using a NICER network with rescaling.
+ (Accordingly, only the rescaling layers contribute to the Jacobian.) The
+ loss function, i.e.
+ the KL-divergence, for different temperatures is similar to the general
+ case
+\begin_inset Formula 
+\begin{align}
+KL\left(p_{X}^{\left(\tau_{k}\right)}(x)||\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\mu_{X}^{\left(\tau_{k}\right)}\left(x\right)S_{f}^{\frac{1-\tau_{k}}{\tau_{k}}}\right) & \approx\mathbb{E}_{z\sim q_{Z}^{\left(\tau_{k}\right)}(z)}\left[-\log\left(\mu_{X}^{\left(\tau_{k}\right)}(f^{-1}(z))\right)-\frac{1}{\tau_{k}}\log\left(S_{f}\right)\right]\\
+ & =\mathbb{E}_{z\sim q_{Z}^{\left(\tau_{k}\right)}(z)}\left[\left(\frac{u(f^{-1}(z))}{k_{B}T\tau_{k}}\right)-\frac{1}{\tau_{k}}\log\left(S_{f}\right)\right]\\
+ & =\frac{1}{\tau_{k}}\mathbb{E}_{z\sim q_{Z}^{\left(\tau_{k}\right)}(z)}\left[\left(\frac{u(f^{-1}(z))}{k_{B}T}\right)-\log\left(S_{f}\right)\right]
+\end{align}
+
+\end_inset
+
+
+\color red
+Same problem as before...
+\end_layout
+
+\begin_layout Standard
+Generating samples at different temperatures is again possible.
+ The modified distributions are related by
+\begin_inset Formula 
+\begin{equation}
+q_{Z}^{\left(\tau_{k}\right)}(z)=\frac{Z_{X}^{^{\left(\tau_{k}\right)}}}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\mu_{X}^{\left(\tau_{k}\right)}\left(f^{-1}\left(z\right)\right)\Delta^{\left(\tau_{k}\right)}\left(f^{-1}\left(z\right)\right)S_{f^{-1}}^{^{\frac{1-\tau_{k}}{\tau_{k}}}}S_{f^{-1}}
+\end{equation}
+
+\end_inset
+
+Because 
+\begin_inset Formula $S_{f^{-1}}$
+\end_inset
+
+ is only a scaling factor which does not depend on the input, the transformed
+ samples will follow 
+\begin_inset Formula $\mu_{X}^{\left(\tau_{k}\right)}\left(x\right)$
+\end_inset
+
+ with the error 
+\begin_inset Formula $\Delta^{\left(\tau_{k}\right)}\left(x\right)$
+\end_inset
+
+.
+ This is exactly the same as for volume preserving transformations.
+\end_layout
+
+\begin_layout Subsection
+Non-volume preserving transformations
+\end_layout
+
+\begin_layout Standard
+In the more general case of non-volume preserving transformations sampling
+ is more difficult.
+ Such a transformation can be realized with RealNVP transformations or ordinary
+ differential equation networks.
+ The traning was already discussed (see equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:trainingnonpreserving"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ 
+\color red
+Same problem as before...
+\end_layout
+
+\begin_layout Standard
+Sampling, however, is more difficult than before, because the determinant
+ of the Jacobian is dependent on the input.
+ Therefore, transformed samples of 
+\begin_inset Formula $q_{Z}^{\left(\tau_{k}\right)}(z)$
+\end_inset
+
+ follow the distribution
+\begin_inset Formula 
+\begin{equation}
+\tilde{\mu}_{X}^{\left(\tau_{k}\right)}\left(x\right)=\frac{Z_{X}^{^{\left(\tau_{k}\right)}}}{Z_{X}^{^{\frac{1}{\tau_{k}}}}}\frac{Z_{Z}^{\frac{1}{\tau_{k}}}}{Z_{Z}^{\left(\tau_{k}\right)}}\mu_{X}^{\left(\tau_{k}\right)}\left(x\right)\left|\det J\left(x\right)\right|^{\frac{1-\tau_{k}}{\tau_{k}}}\Delta^{\left(\tau_{k}\right)}\left(x\right)
+\end{equation}
+
+\end_inset
+
+which is not normalized and even without the error not a Boltzmann distribution.
+ Thus, reweighting is possible in theory, but wont result in good samples.
+\end_layout
+
+\end_body
+\end_document
