@@ -246,7 +246,7 @@ As we are interested in training a deep network to learn the function
 \end_inset
 
  as part of the loss function.
- In each pair, one is an exact probablity distribution (
+ In each pair, one is an exact probability distribution (
 \begin_inset Formula $\mu$
 \end_inset
 
@@ -347,7 +347,7 @@ It can also be shown that
 \end_layout
 
 \begin_layout Subsection
-Thermodynamic interpretation of the probability transformation
+Thermodynamic interpretation of probability transformations
 \end_layout
 
 \begin_layout Standard
@@ -361,7 +361,7 @@ Now, let's assume that the network has converged to a transformation.
 \begin_inset Formula $q_{Z}\neq p_{Z}$
 \end_inset
 
-), a reweighting factor 
+), a re-weighting factor 
 \begin_inset Formula $w=\frac{\mu\left(x\right)}{\nu\left(x\right)}$
 \end_inset
 
@@ -372,12 +372,7 @@ Now, let's assume that the network has converged to a transformation.
 \end_inset
 
 .
- We make the assumption that 
-\begin_inset Formula $f$
-\end_inset
-
- is a volume preserving diffeomorphism, which basically describes a Hamiltonian
- flow, if both spaces 
+ We assume that both latent and configuration spaces 
 \begin_inset Formula $x$
 \end_inset
 
@@ -385,8 +380,8 @@ Now, let's assume that the network has converged to a transformation.
 \begin_inset Formula $z$
 \end_inset
 
- are considered as physical configuration spaces.
- We can treat the Gaussian distribution 
+ are physical configuration spaces of the same system.
+ Therefore, we treat the Gaussian distribution 
 \begin_inset Formula $q\left(z\right)$
 \end_inset
 
@@ -396,11 +391,88 @@ Now, let's assume that the network has converged to a transformation.
 \end_inset
 
 .
+ It is to be noted that because now we are treating both latent and real
+ representations as belonging to physical configuration spaces, the potential
+ energies need to have the same reference value.
+ Adding a constant to 
+\begin_inset Formula $u_{X}\left(x\right)$
+\end_inset
+
+ should also affect 
+\begin_inset Formula $u_{Z}\left(z\right)$
+\end_inset
+
+, and more importantly, the Gaussian normalization factor 
+\begin_inset Formula $Z_{q}$
+\end_inset
+
+, which we treat as a partition function.
+\end_layout
+
+\begin_layout Subsubsection
+Reversibility and volume-preservation
+\end_layout
+
+\begin_layout Standard
+While the diffeomorphism 
+\begin_inset Formula $f$
+\end_inset
+
+, by the virtue of reversible layers used in the BG, describes a reversible
+ flow in the configuration space, we note that in general, we cannot make
+ the assumption that 
+\begin_inset Formula $f$
+\end_inset
+
+ is also volume preserving (
+\begin_inset Formula $\left|J\left(f\left(x\right)\right)\right|\neq1$
+\end_inset
+
+).
+ Thus, quite generally, it describes a flow in phase space resulting from
+ a 
+\begin_inset Quotes eld
+\end_inset
+
+reversible non-Hamiltonian dynamics
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is not surprising, if we aim to treat both distributions 
+\begin_inset Formula $q\left(z\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\nu\left(x\right)$
+\end_inset
+
+ at the same temperature, 
+\begin_inset Formula $T$
+\end_inset
+
+.
+ The transformation between these two thermodynamic states needs to be 
+\begin_inset Quotes eld
+\end_inset
+
+thermostatted
+\begin_inset Quotes erd
+\end_inset
+
+, and in general, through this process, there is a net energy transfer between
+ the system and the environment in the form of heat.
+ This can be translated into fluctuations in the volume elements of the
+ phase space.
+\end_layout
+
+\begin_layout Subsubsection
+Thermodynamic equilibrium
 \end_layout
 
 \begin_layout Standard
 One problem that immediately becomes apparent is that states connected by
- a BG transformation cannot both be considered in thermodynamic equilibriun.
+ a BG transformation cannot both be considered in thermodynamic equilibrium.
  For example, if we consider the transformation from 
 \begin_inset Formula $q\left(z\right)$
 \end_inset
@@ -427,11 +499,16 @@ resembles
 \end_inset
 
  the Boltzmann distribution, 
-\begin_inset Formula $\mu\left(x\right).$
+\begin_inset Formula $\mu\left(x\right)$
 \end_inset
 
- Keeping that in mind, we consider the paths defining the Hamiltonian flow
- to be given by the field 
+, while the equilibrium Boltzmann distribution at temperature 
+\begin_inset Formula $T$
+\end_inset
+
+ is unique.
+ Keeping that in mind, we consider the paths defining the non-Hamiltonian
+ flow to be given by the field 
 \begin_inset Formula $x=\phi\left(t;x_{0},t_{0}\right)$
 \end_inset
 
@@ -453,8 +530,9 @@ resembles
 \end_inset
 
 .
- In order to discuss the free energy change under this transformation, we
- first introduce the Jarzynski equality.
+ In order to discuss the free energy change under this transformation, which
+ in general belongs to the realm of non-equilibrium thermodynamics, we first
+ introduce the Jarzynski equality.
 \end_layout
 
 \begin_layout Subsubsection
@@ -475,7 +553,15 @@ The Jarzynski equality states that if a system in thermodynamic equilibrium
 \begin_inset Formula $B$
 \end_inset
 
- (which does not necessarily need to be an equilibrium state),
+ (which does not necessarily need to be an equilibrium state), 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jarzynski1997"
+literal "false"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -507,6 +593,367 @@ in which
 \end_layout
 
 \begin_layout Subsubsection
+Entropy production
+\end_layout
+
+\begin_layout Standard
+As we mentioned, for the non-equilibrium transformation between 
+\begin_inset Formula $q$
+\end_inset
+
+ and 
+\begin_inset Formula $\nu$
+\end_inset
+
+, we need to calculate the energy transfer in the form of heat.
+ Here, we consider two assumptions for the process taking place between
+ 
+\begin_inset Formula $q$
+\end_inset
+
+ and 
+\begin_inset Formula $\nu$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+In the first case, we assume this transformation to be a Markovian stochastic
+ process.
+ It happens in memory-less steps, and the choice of destination probability
+ distribution in each step is stochastic.
+ Reversibility has only meaning as the detailed-balance holding in these
+ steps.
+ This obviously is different from what the BG does.
+ But it helps elucidate further results.
+ 
+\end_layout
+
+\begin_layout Standard
+In the second case, we assume 
+\begin_inset Formula $\phi$
+\end_inset
+
+ to represent a non-Hamiltonian flow.
+ We make the assumption that this process can be modeled as equivalent to
+ a Nosé-Hoover type thermostat.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Case 1: stochastic Markovian process
+\end_layout
+
+\begin_layout Standard
+For this case, the 
+\begin_inset Quotes eld
+\end_inset
+
+microscopically reversibility
+\begin_inset Quotes erd
+\end_inset
+
+ of process, is equivalent to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Crooks1998"
+literal "false"
+
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\exp\left(-\frac{Q\left[z\rightarrow x\right]}{kT}\right)=\frac{P\left[z\rightarrow x\mid\phi\right]}{P\left[x\rightarrow z\mid\bar{\phi}\right]}\label{eq:microscopic_reveriability}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $P\left[z\rightarrow x\mid\phi\right]$
+\end_inset
+
+ denotes the probability that, under the flow 
+\begin_inset Formula $\phi$
+\end_inset
+
+, we take the path from the microstate 
+\begin_inset Formula $z$
+\end_inset
+
+ to the microstate 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ In reverse, 
+\begin_inset Formula $P\left[x\rightarrow z\mid\bar{\phi}\right]$
+\end_inset
+
+ denotes the probability of the reverse path under the reverse flow.
+ If we insist to apply this interpretation to the action of BG, we need
+ to consider it as,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Q\left[z\rightarrow x\right]=-kT\log\left(\frac{q\left(z\right)\delta\left(\phi\left(+\tau;z,-\tau\right)-x\right)}{\nu\left(x\right)\delta\left(\bar{\phi}\left(-\tau;x,+\tau\right)-z\right)}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is interesting to observe that,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Delta S\left[z\rightarrow x\right]=\frac{Q\left[z\rightarrow x\right]}{T}=-k\log\left(\frac{q\left(z\right)}{q\left(f\left(x\right)\right)\left|J\left(f\left(x\right)\right)\right|}\right)=k\log\left|J\left(f\left(x\right)\right)\right|
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Case 2: Thermostatted non-Hamiltonian flow
+\end_layout
+
+\begin_layout Standard
+As we are now considering non-Hamiltonian dynamics, we need to account for
+ entropy production due to volume element fluctuations.
+ In order to do so in a reliable manner, we start by connecting the Jacobian
+ determinant to the metric of the phase space,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left|J\left(\phi\left(t;z,-\tau\right)\right)\right|=\frac{\sqrt{g\left(\phi\left(t;z,-\tau\right)\right)}}{\sqrt{g\left(z\right)}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where the 
+\begin_inset Formula $\sqrt{g}$
+\end_inset
+
+ is the metric determinant factor.
+ With this definition, we can write the generalized Liouville equation 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Tuckerman2001"
+literal "false"
+
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\left(\rho\sqrt{g}\right)}{\partial t}+\nabla\cdot\left(\rho\sqrt{g}\dot{\phi}\right)=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\rho\left(t\right)$
+\end_inset
+
+ is the time-dependent non-equilibrium probability distribution in the phase
+ space.
+ 
+\end_layout
+
+\begin_layout Standard
+We make the assumption that a Nosé-Hoover type non-Hamiltonian dynamics
+ governs the flow 
+\begin_inset Formula $\phi$
+\end_inset
+
+ in phase space.
+ Thus,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\dot{\mathbf{r}}_{i} & =\frac{\mathbf{p}_{i}}{m_{i}}\\
+\dot{\mathbf{p}}_{i} & =\mathbf{F}_{i}-\frac{p_{\eta}}{Q}\mathbf{p}_{i}\\
+\dot{\eta} & =\frac{p_{\eta}}{Q}\\
+\dot{p}_{\eta} & =\sum\frac{\mathbf{p}_{i}^{2}}{m_{i}}-3NkT
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\eta$
+\end_inset
+
+ and its conjugate momentum, 
+\begin_inset Formula $p_{\eta}$
+\end_inset
+
+, are the additional degrees of freedom, allowing for the thermostatting.
+ The average kinetic energy of the system in this setup fluctuates around
+ the equilibrium value of 
+\begin_inset Formula $\frac{3}{2}NkT$
+\end_inset
+
+.
+ While the dynamics is non-Hamiltonian in the original degrees of freedom,
+ it conserves energy in the extended system, i.e.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Tuckerman2001"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+H^{\prime}=H\left(\mathbf{p},\mathbf{q}\right)+\frac{p_{\eta}^{2}}{2Q}+3NkT\eta=const.\label{eq:extended_hamiltonian}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+On the other hand, the metric determinant factor for this extended dynamics
+ is 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Tuckerman2001"
+literal "false"
+
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sqrt{g}=\exp\left(3N\eta\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+which suggests that,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left|J\left(\phi\left(t;z,-\tau\right)\right)\right|=\exp\left[3N\left(\eta\left(-\tau\right)-\eta\left(t\right)\right)\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If we neglect the amount of energy attributed to the momentum of the extended
+ variable (the 
+\begin_inset Formula $\frac{p_{\eta}^{2}}{2Q}$
+\end_inset
+
+ term in Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:extended_hamiltonian"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), we can come up with an estimate of the energy transfer to the system
+ due to thermostatting, which is the heat transferred to the system.
+ This would give us,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+Q\left[z\rightarrow x\right] & =\left(H^{\prime}-H\right)_{z\rightarrow x}\\
+ & \approx3NkT\left(\eta\left(t\right)-\eta\left(-\tau\right)\right)\\
+ & =-kT\log\left|J\left(f^{-1}\left(z\right)\right)\right|\\
+ & =kT\log\left|J\left(f\left(x\right)\right)\right|\label{eq:heat_non_hamiltonian}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, for the entropy production,
+\begin_inset Formula 
+\begin{align}
+\Delta S\left[z\rightarrow x\right] & =\frac{Q\left[z\rightarrow x\right]}{T}\\
+ & =k\log\left|J\left(f\left(x\right)\right)\right|\\
+\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Interestingly, the results from the two cases match.
+ Though the second case is more realistic, we have neglected the effect
+ due to the term 
+\begin_inset Formula $\frac{p_{\eta}^{2}}{2Q}$
+\end_inset
+
+ in this case.
+\end_layout
+
+\begin_layout Subsubsection
 Free energy difference
 \end_layout
 
@@ -519,8 +966,8 @@ Now, assume two macrostates
 \begin_inset Formula $B$
 \end_inset
 
-, which encompass ensembles of microstates in the starting and finishing
- configurations, i.e.
+, which encompass ensembles of microstates in the starting and final configurati
+ons, i.e.
  if the system is in state 
 \begin_inset Formula $A$
 \end_inset
@@ -555,69 +1002,7 @@ where
 \end_inset
 
  is the heat supplied to the system from the heat bath during such a transformat
-ion.
- For a 
-\begin_inset Quotes eld
-\end_inset
-
-microscopically reversible
-\begin_inset Quotes erd
-\end_inset
-
- process, which presumably happens under the volume-preserving transformaiton
- learned by the Boltzmann Generator, we have,
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\exp\left(-\frac{Q\left[z\rightarrow x\right]}{kT}\right)=\frac{P\left[z\rightarrow x\mid\phi\right]}{P\left[x\rightarrow z\mid\bar{\phi}\right]}\label{eq:microscopic_reveriability}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where 
-\begin_inset Formula $P\left[z\rightarrow x\mid\phi\right]$
-\end_inset
-
- denotes the probablity that, under the flow 
-\begin_inset Formula $\phi$
-\end_inset
-
-, we take the path from the microstate 
-\begin_inset Formula $z$
-\end_inset
-
- to the microstate 
-\begin_inset Formula $x$
-\end_inset
-
-.
- In reverse, 
-\begin_inset Formula $P\left[x\rightarrow z\mid\bar{\phi}\right]$
-\end_inset
-
- denotes the probability of the reverse path under the reverse flow.
- It is to be noted that because the number of particles and the temperature
- are considered constant here, a change in the volume is the only explanation
- possible for the probability changes.
- Because the action of the Boltzmann generator is deterministic, this condition
- simplifies to,
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-Q\left[z\rightarrow x\right]=-kT\log\left(\frac{q\left(z\right)\delta\left(\phi\left(+\tau;z,-\tau\right)-x\right)}{\nu\left(x\right)\delta\left(\bar{\phi}\left(-\tau;x,+\tau\right)-z\right)}\right)
-\end{equation}
-
-\end_inset
-
-
+ion, and can be substituted based on either of the methods described above.
 \end_layout
 
 \begin_layout Standard
@@ -635,12 +1020,11 @@ noprefix "false"
 \begin_inset Formula 
 \begin{align}
 \exp\left(-\frac{F_{B}-F_{A}}{kT}\right) & =\int\boldsymbol{1}_{A}\left(z\right)q\left(z\right)\exp\left(-\frac{u_{X}\left(f^{-1}\left(z\right)\right)-u_{Z}\left(z\right)}{kT}\right)\exp\left(-\frac{Q\left[z\rightarrow x\right]}{kT}\right)dz\\
- & =\int\boldsymbol{1}_{A}\left(z\right)q\left(z\right)\exp\left(-\frac{u_{X}\left(f^{-1}\left(z\right)\right)-u_{Z}\left(z\right)}{kT}\right)\frac{q\left(z\right)}{\nu\left(f^{-1}\left(z\right)\right)}dz\\
- & =\int\boldsymbol{1}_{A}\left(z\right)q\left(z\right)\frac{\exp\left(\frac{u_{Z}\left(z\right)}{kT}\right)\frac{1}{Z_{q}}\exp\left(\frac{-u_{Z}\left(z\right)}{kT}\right)\exp\left(\frac{-u_{X}\left(f^{-1}\left(z\right)\right)}{kT}\right)}{\nu\left(f^{-1}\left(z\right)\right)}dz\\
- & =\frac{1}{Z_{q}}\int\boldsymbol{1}_{A}\left(z\right)q\left(z\right)\frac{\exp\left(\frac{-u_{X}\left(f^{-1}\left(z\right)\right)}{kT}\right)}{\nu\left(f^{-1}\left(z\right)\right)}dz\\
- & =\frac{1}{Z_{q}}\int\boldsymbol{1}_{B}\left(x\right)q\left(f\left(x\right)\right)\frac{\exp\left(\frac{-u_{X}\left(x\right)}{kT}\right)}{\nu\left(x\right)}\left|J\left(f\left(x\right)\right)\right|dx\\
- & =\frac{1}{Z_{q}}\int\boldsymbol{1}_{B}\left(x\right)\nu\left(x\right)\frac{\exp\left(\frac{-u_{X}\left(x\right)}{kT}\right)}{\nu\left(x\right)}dx\\
- & =\frac{1}{Z_{q}}\int\boldsymbol{1}_{B}\left(x\right)\exp\left(\frac{-u_{X}\left(x\right)}{kT}\right)dx
+ & =\int\boldsymbol{1}_{A}\left(z\right)q\left(z\right)\exp\left(-\frac{u_{X}\left(f^{-1}\left(z\right)\right)-u_{Z}\left(z\right)}{kT}\right)\left|J\left(f^{-1}\left(z\right)\right)\right|dz\\
+ & =\int\boldsymbol{1}_{A}\left(z\right)\frac{1}{Z_{q}}\exp\left(\frac{-u_{Z}\left(z\right)}{kT}\right)\exp\left(\frac{u_{Z}\left(z\right)}{kT}\right)\exp\left(\frac{-u_{X}\left(f^{-1}\left(z\right)\right)}{kT}\right)\left|J\left(f^{-1}\left(z\right)\right)\right|dz\\
+ & =\frac{1}{Z_{q}}\int\boldsymbol{1}_{A}\left(z\right)\exp\left(\frac{-u_{X}\left(f^{-1}\left(z\right)\right)}{kT}\right)\left|J\left(f^{-1}\left(z\right)\right)\right|dz\\
+ & =\frac{1}{Z_{q}}\int\boldsymbol{1}_{B}\left(x\right)\exp\left(\frac{-u_{X}\left(x\right)}{kT}\right)dx\\
+\nonumber 
 \end{align}
 
 \end_inset
@@ -688,7 +1072,7 @@ As a test of this result, we can consider the extreme case where the macrostates
 \end_inset
 
 .
- In general, it is interesting to see that this result does not explictly
+ In general, it is interesting to see that this result does not explicitly
  depend on the approximate distribution 
 \begin_inset Formula $\nu\left(x\right)$
 \end_inset
@@ -703,6 +1087,22 @@ lly available.
  Thus, this result provides a tool for calculating free energy differences
  between any two macrostates in the original configuration space, even if
  different Boltzmann Generators have been used.
+\end_layout
+
+\begin_layout Standard
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "library"
+options "plain"
+
+\end_inset
+
+
 \end_layout
 
 \end_body
