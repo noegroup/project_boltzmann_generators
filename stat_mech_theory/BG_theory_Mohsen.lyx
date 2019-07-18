@@ -701,13 +701,28 @@ where
 
  denotes the probability of the reverse path under the reverse flow.
  If we insist to apply this interpretation to the action of BG, we need
- to consider it as,
+ to consider the detailed balance as,
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-Q\left[z\rightarrow x\right]=-kT\log\left(\frac{q\left(z\right)\delta\left(\phi\left(+\tau;z,-\tau\right)-x\right)}{\nu\left(x\right)\delta\left(\bar{\phi}\left(-\tau;x,+\tau\right)-z\right)}\right)
+q\left(z\right)P\left[z\rightarrow x\mid\phi\right]=\nu\left(x\right)P\left[x\rightarrow z\mid\bar{\phi}\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+which results in,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Q\left[z\rightarrow x\right]=-kT\log\left(\frac{\nu\left(x\right)}{q\left(z\right)}\right)
 \end{equation}
 
 \end_inset
@@ -722,7 +737,7 @@ It is interesting to observe that,
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\Delta S\left[z\rightarrow x\right]=\frac{Q\left[z\rightarrow x\right]}{T}=-k\log\left(\frac{q\left(z\right)}{q\left(f\left(x\right)\right)\left|J\left(f\left(x\right)\right)\right|}\right)=k\log\left|J\left(f\left(x\right)\right)\right|
+\Delta S\left[z\rightarrow x\right]=\frac{Q\left[z\rightarrow x\right]}{T}=-k\log\left(\frac{q\left(f\left(x\right)\right)\left|J\left(f\left(x\right)\right)\right|}{q\left(z\right)}\right)=-k\log\left|J\left(f\left(x\right)\right)\right|
 \end{equation}
 
 \end_inset
@@ -894,6 +909,21 @@ which suggests that,
 \end_layout
 
 \begin_layout Standard
+and considering the endpoints of the transformation,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left|J\left(f^{-1}\left(z\right)\right)\right|=\exp\left[3N\left(\eta\left(-\tau\right)-\eta\left(\tau\right)\right)\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 If we neglect the amount of energy attributed to the momentum of the extended
  variable (the 
 \begin_inset Formula $\frac{p_{\eta}^{2}}{2Q}$
@@ -918,10 +948,10 @@ noprefix "false"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-Q\left[z\rightarrow x\right] & =\left(H^{\prime}-H\right)_{z\rightarrow x}\\
- & \approx3NkT\left(\eta\left(t\right)-\eta\left(-\tau\right)\right)\\
- & =-kT\log\left|J\left(f^{-1}\left(z\right)\right)\right|\\
- & =kT\log\left|J\left(f\left(x\right)\right)\right|\label{eq:heat_non_hamiltonian}
+Q\left[z\rightarrow x\right] & =\left(H-H^{\prime}\right)_{z\rightarrow x}\\
+ & \approx3NkT\left(\eta\left(-\tau\right)-\eta\left(\tau\right)\right)\\
+ & =kT\log\left|J\left(f^{-1}\left(z\right)\right)\right|\\
+ & =-kT\log\left|J\left(f\left(x\right)\right)\right|\label{eq:heat_non_hamiltonian}
 \end{align}
 
 \end_inset
@@ -930,11 +960,11 @@ Q\left[z\rightarrow x\right] & =\left(H^{\prime}-H\right)_{z\rightarrow x}\\
 \end_layout
 
 \begin_layout Standard
-Thus, for the entropy production,
+and, for the entropy production,
 \begin_inset Formula 
 \begin{align}
 \Delta S\left[z\rightarrow x\right] & =\frac{Q\left[z\rightarrow x\right]}{T}\\
- & =k\log\left|J\left(f\left(x\right)\right)\right|\\
+ & =-k\log\left|J\left(f\left(x\right)\right)\right|\\
 \nonumber 
 \end{align}
 
@@ -1019,7 +1049,7 @@ noprefix "false"
 , we get,
 \begin_inset Formula 
 \begin{align}
-\exp\left(-\frac{F_{B}-F_{A}}{kT}\right) & =\int\boldsymbol{1}_{A}\left(z\right)q\left(z\right)\exp\left(-\frac{u_{X}\left(f^{-1}\left(z\right)\right)-u_{Z}\left(z\right)}{kT}\right)\exp\left(-\frac{Q\left[z\rightarrow x\right]}{kT}\right)dz\\
+\exp\left(-\frac{F_{B}-F_{A}}{kT}\right) & =\int\boldsymbol{1}_{A}\left(z\right)q\left(z\right)\exp\left(-\frac{u_{X}\left(f^{-1}\left(z\right)\right)-u_{Z}\left(z\right)}{kT}\right)\exp\left(\frac{Q\left[z\rightarrow x\right]}{kT}\right)dz\\
  & =\int\boldsymbol{1}_{A}\left(z\right)q\left(z\right)\exp\left(-\frac{u_{X}\left(f^{-1}\left(z\right)\right)-u_{Z}\left(z\right)}{kT}\right)\left|J\left(f^{-1}\left(z\right)\right)\right|dz\\
  & =\int\boldsymbol{1}_{A}\left(z\right)\frac{1}{Z_{q}}\exp\left(\frac{-u_{Z}\left(z\right)}{kT}\right)\exp\left(\frac{u_{Z}\left(z\right)}{kT}\right)\exp\left(\frac{-u_{X}\left(f^{-1}\left(z\right)\right)}{kT}\right)\left|J\left(f^{-1}\left(z\right)\right)\right|dz\\
  & =\frac{1}{Z_{q}}\int\boldsymbol{1}_{A}\left(z\right)\exp\left(\frac{-u_{X}\left(f^{-1}\left(z\right)\right)}{kT}\right)\left|J\left(f^{-1}\left(z\right)\right)\right|dz\\
